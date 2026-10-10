@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kasir Hebat Salsabila - Toko Mainan & Belajar Anak</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Fredoka & Nunito for child-friendly typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            salsa: {
+              pink: '#FF6B9D',
+              yellow: '#FFC72C',
+              blue: '#4D96FF',
+              green: '#6BCB77',
+              purple: '#9B51E0',
+              orange: '#FF9F45'
+            }
+          },
+          fontFamily: {
+            fredoka: ['Fredoka', 'sans-serif'],
+            nunito: ['Nunito', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(135deg, #e0f2fe 0%, #fef3c7 50%, #fce7f3 100%);
+      min-height: 100vh;
+      user-select: none;
+    }
+
+    .bounce-subtle {
+      animation: bounceSubtle 2s infinite;
+    }
+    @keyframes bounceSubtle {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    .pop-in {
+      animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popIn {
+      0% { transform: scale(0.8); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background-color: #cbd5e1;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="p-2 sm:p-4 text-slate-800">
+
+  <div class="max-w-6xl mx-auto">
+    <!-- Header Utama -->
+    <header class="bg-white/90 backdrop-blur border-4 border-amber-300 shadow-xl rounded-3xl p-3 sm:p-5 mb-4 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="bg-amber-400 text-white p-3 rounded-2xl shadow-inner text-3xl sm:text-4xl bounce-subtle">
+          🛒
+        </div>
+        <div>
+          <h1 class="font-fredoka text-2xl sm:text-4xl text-rose-500 font-bold tracking-wide">
+            KASIR HEBAT SALSABILA
+          </h1>
+          <p class="text-xs sm:text-sm font-bold text-sky-600">
+            🌟 Belajar Jual Beli & Berhitung Sederhana (TK B / PAUD) 🌟
+          </p>
+        </div>
+      </div>
+
+      <!-- Control Bar Suara & Navigasi Tab -->
+      <div class="flex items-center gap-2 flex-wrap justify-center">
+        <!-- Tombol Unmute / Voice Toggle -->
+        <button id="btn-toggle-voice" onclick="toggleVoice()" class="flex items-center gap-2 bg-purple-100 border-2 border-purple-400 text-purple-700 px-3 py-2 rounded-2xl font-bold text-xs sm:text-sm hover:bg-purple-200 transition">
+          <span id="voice-icon" class="text-xl">🔊</span>
+          <span id="voice-label">Suara: ON</span>
+        </button>
+
+        <!-- Navigasi Menu -->
+        <div class="bg-slate-100 p-1.5 rounded-2xl border-2 border-slate-200 flex gap-1">
+          <button id="tab-kasir" onclick="switchTab('kasir')" class="px-4 py-2 rounded-xl font-bold text-xs sm:text-base transition bg-rose-500 text-white shadow">
+            🏪 Menu Kasir
+          </button>
+          <button id="tab-barang" onclick="switchTab('barang')" class="px-4 py-2 rounded-xl font-bold text-xs sm:text-base transition text-slate-600 hover:bg-slate-200">
+            📦 Kelola Barang
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- TAB 1: MENU KASIR -->
+    <div id="section-kasir" class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+      
+      <!-- Sisi Kiri: Katalog Juaran (8 Cols) -->
+      <div class="lg:col-span-7 space-y-4">
+        
+        <!-- Filter Kategori -->
+        <div class="bg-white border-2 border-sky-200 rounded-3xl p-3 shadow-md">
+          <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 px-1">Pilih Jenis Juaran:</div>
+          <div class="flex gap-2 overflow-x-auto custom-scrollbar pb-1" id="category-bar">
+            <!-- Dynamically Rendered Categories -->
+          </div>
+        </div>
+
+        <!-- Grid Barang -->
+        <div class="bg-white/80 border-2 border-slate-200 rounded-3xl p-4 shadow-md min-h-[420px]">
+          <div class="flex justify-between items-center mb-3">
+            <h2 class="font-fredoka text-lg sm:text-xl text-slate-700 font-bold flex items-center gap-2">
+              <span id="cat-title-icon">🛒</span> <span id="cat-title-name">Semua Juaran</span>
+            </h2>
+            <span class="text-xs font-bold bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full" id="item-count-badge">8 Barang</span>
+          </div>
+
+          <div id="grid-produk" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            <!-- Products Card Rendered Here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Sisi Kanan: Struk / Keranjang Belanja & Pembayaran (5 Cols) -->
+      <div class="lg:col-span-5 space-y-4">
+        
+        <div class="bg-white border-4 border-emerald-300 rounded-3xl p-4 shadow-lg flex flex-col h-full justify-between">
+          <div>
+            <div class="flex items-center justify-between border-b-2 border-dashed border-slate-200 pb-3 mb-3">
+              <div class="flex items-center gap-2">
+                <span class="text-2xl">🧾</span>
+                <h2 class="font-fredoka text-xl text-emerald-600 font-bold">Keranjang Belanja</h2>
+              </div>
+              <button onclick="resetKeranjang()" class="text-xs font-bold bg-rose-100 hover:bg-rose-200 text-rose-600 px-2.5 py-1.5 rounded-xl transition flex items-center gap-1">
+                🗑️ Bersihkan
+              </button>
+            </div>
+
+            <!-- List Item di Keranjang (Penjumlahan) -->
+            <div id="list-keranjang" class="space-y-2 max-h-56 overflow-y-auto custom-scrollbar pr-1 mb-3">
+              <!-- Item keranjang dimasukkan via JS -->
+              <div class="text-center py-8 text-slate-400 font-bold text-sm">
+                🛍️ Belum ada barang yang dibeli.<br>Ketuk gambar barang di sebelah kiri!
+              </div>
+            </div>
+          </div>
+
+          <!-- Total Harga (Penjumlahan) -->
+          <div class="bg-emerald-50 border-2 border-emerald-200 rounded-2xl p-4 mb-4">
+            <div class="flex justify-between items-center text-slate-600 font-bold text-sm mb-1">
+              <span>Total yang Harus Dibayar:</span>
+              <span class="text-xs bg-emerald-200 text-emerald-800 px-2 py-0.5 rounded-md font-extrabold">Penjumlahan</span>
+            </div>
+            <div class="text-3xl sm:text-4xl font-fredoka font-bold text-emerald-600 flex items-center justify-between">
+              <span>Rp</span>
+              <span id="txt-total-bayar">0</span>
+            </div>
+
+            <!-- Papan Penjumlahan Angka Belajar TK -->
+            <div id="papan-penjumlahan" onclick="bacaPenjumlahan()" class="mt-3 bg-white hover:bg-amber-100/80 transition cursor-pointer border-2 border-amber-300 hover:border-amber-400 rounded-2xl p-3 text-center shadow-sm active:scale-95 group relative">
+              <div class="text-xs font-bold text-amber-800 uppercase tracking-wide flex items-center justify-center gap-1 mb-1 flex-wrap">
+                <span>🧮</span> Penjumlahan Belajar TK
+                <span class="bg-amber-400 text-amber-950 text-[10px] px-2 py-0.5 rounded-full font-black animate-pulse flex items-center gap-1">
+                  🔊 Ketuk Suara
+                </span>
+              </div>
+              <div id="txt-rumus-angka" class="font-fredoka text-lg sm:text-xl font-extrabold text-amber-600 bg-amber-50 group-hover:bg-amber-100 p-2.5 rounded-xl border border-amber-200 tracking-wide break-words transition">
+                0
+              </div>
+              <div id="txt-rumus-emoji" class="text-xs font-bold text-amber-700 mt-2 break-words">
+                <!-- Visual Emoji Penjumlahan -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Pilihan Uang Bayar -->
+          <div class="space-y-2">
+            <label class="block text-xs font-extrabold text-slate-500 uppercase tracking-wide">
+              💵 Pilih Uang Bayar Pembeli:
+            </label>
+            <div class="grid grid-cols-3 gap-2">
+              <button onclick="bayarDenganUang(1000)" class="bg-blue-50 hover:bg-blue-100 border-2 border-blue-300 text-blue-700 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex flex-col items-center">
+                <span>Rp 1.000</span>
+                <span class="text-[10px] text-blue-500">Seribu</span>
+              </button>
+              <button onclick="bayarDenganUang(2000)" class="bg-blue-50 hover:bg-blue-100 border-2 border-blue-300 text-blue-700 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex flex-col items-center">
+                <span>Rp 2.000</span>
+                <span class="text-[10px] text-blue-500">Dua Ribu</span>
+              </button>
+              <button onclick="bayarDenganUang(5000)" class="bg-amber-50 hover:bg-amber-100 border-2 border-amber-300 text-amber-700 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex flex-col items-center">
+                <span>Rp 5.000</span>
+                <span class="text-[10px] text-amber-600">Lima Ribu</span>
+              </button>
+              <button onclick="bayarDenganUang(10000)" class="bg-purple-50 hover:bg-purple-100 border-2 border-purple-300 text-purple-700 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex flex-col items-center">
+                <span>Rp 10.000</span>
+                <span class="text-[10px] text-purple-500">Sepuluh Ribu</span>
+              </button>
+              <button onclick="bayarDenganUang(20000)" class="bg-teal-50 hover:bg-teal-100 border-2 border-teal-300 text-teal-700 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex flex-col items-center">
+                <span>Rp 20.000</span>
+                <span class="text-[10px] text-teal-600">Dua Puluh Ribu</span>
+              </button>
+              <button onclick="bayarDenganUang(50000)" class="bg-sky-50 hover:bg-sky-100 border-2 border-sky-300 text-sky-700 py-2 rounded-xl font-bold text-xs sm:text-sm transition flex flex-col items-center">
+                <span>Rp 50.000</span>
+                <span class="text-[10px] text-sky-600">Lima Puluh Ribu</span>
+              </button>
+            </div>
+
+            <!-- Manual Input Uang Custom -->
+            <div class="flex gap-2 pt-1">
+              <input type="number" id="input-uang-pas" placeholder="Ketik Nominal Pas/Lain..." class="w-full bg-slate-50 border-2 border-slate-300 rounded-xl px-3 py-1.5 text-sm font-bold focus:outline-none focus:border-emerald-500">
+              <button onclick="bayarManual()" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-4 py-1.5 rounded-xl text-sm transition">
+                Bayar
+              </button>
+            </div>
+          </div>
+
+          <!-- Hasil Kembalian (Pengurangan) -->
+          <div id="box-kembalian" class="mt-3 bg-amber-50 border-2 border-amber-300 rounded-2xl p-3 text-center hidden pop-in">
+            <div class="text-xs font-bold text-amber-800">Uang Kembalian (Pengurangan):</div>
+            <div class="text-2xl font-fredoka font-bold text-amber-600 my-0.5">
+              Rp <span id="txt-kembalian">0</span>
+            </div>
+            <div id="txt-kembali-suara" class="text-xs font-bold text-amber-700 bg-amber-100/70 p-1.5 rounded-xl">
+              <!-- Teks penjelasan kembalian -->
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- TAB 2: KELOLA DAFTAR BARANG JUARAN -->
+    <div id="section-barang" class="hidden space-y-4 pop-in">
+      <div class="bg-white border-4 border-purple-300 rounded-3xl p-5 shadow-xl">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-purple-100 pb-4 mb-4 gap-2">
+          <div>
+            <h2 class="font-fredoka text-2xl text-purple-700 font-bold flex items-center gap-2">
+              <span>📦</span> Pengaturan & Tambah Jenis Barang Juaran
+            </h2>
+            <p class="text-xs font-bold text-slate-500">Tambah barang favorit anak dan atur harganya untuk bermain kasir!</p>
+          </div>
+          <button onclick="resetDataBawaan()" class="text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-600 px-3 py-2 rounded-xl transition border border-slate-300">
+            🔄 Kembalikan Barang Bawaan
+          </button>
+        </div>
+
+        <!-- Form Tambah Barang -->
+        <form id="form-tambah-barang" onsubmit="handleSimpanBarang(event)" class="bg-purple-50 border-2 border-purple-200 rounded-2xl p-4 mb-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 items-end">
+          <div>
+            <label class="block text-xs font-bold text-purple-800 mb-1">Nama Barang:</label>
+            <input type="text" id="add-nama" required placeholder="Contoh: Donat Cokelat" class="w-full bg-white border-2 border-purple-200 rounded-xl px-3 py-2 text-sm font-bold focus:outline-none focus:border-purple-500">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-purple-800 mb-1">Harga (Rupiah):</label>
+            <input type="number" id="add-harga" required min="100" step="100" placeholder="1000" class="w-full bg-white border-2 border-purple-200 rounded-xl px-3 py-2 text-sm font-bold focus:outline-none focus:border-purple-500">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-purple-800 mb-1">Kategori Juaran:</label>
+            <select id="add-kategori" class="w-full bg-white border-2 border-purple-200 rounded-xl px-3 py-2 text-sm font-bold focus:outline-none focus:border-purple-500">
+              <option value="Makanan">🍞 Makanan</option>
+              <option value="Minuman">🧃 Minuman</option>
+              <option value="Buah">🍎 Buah-buahan</option>
+              <option value="Sembako">🍚 Sembako</option>
+              <option value="Alat Tulis">✏️ Alat Tulis Sekolah</option>
+              <option value="Mainan">🧸 Mainan</option>
+              <option value="Obat">💊 Obat-obatan</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-purple-800 mb-1">Pilih Emoji:</label>
+            <div class="flex gap-2">
+              <input type="text" id="add-emoji" maxlength="2" value="🍩" class="w-16 bg-white border-2 border-purple-200 rounded-xl px-3 py-2 text-sm text-center font-bold focus:outline-none focus:border-purple-500">
+              <button type="submit" class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded-xl text-sm transition shadow-md">
+                ➕ Simpan Barang
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <!-- Tabel / List Barang yang Terdaftar -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-purple-100 text-purple-900 font-bold text-xs uppercase border-b-2 border-purple-200">
+                <th class="p-3 rounded-l-xl">Barang</th>
+                <th class="p-3">Kategori</th>
+                <th class="p-3">Harga</th>
+                <th class="p-3 text-center rounded-r-xl">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="table-barang-body" class="divide-y divide-purple-100 text-sm font-bold text-slate-700">
+              <!-- Content rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Modal Sukses Pembayaran / Struk Belanja -->
+  <div id="modal-sukses" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white border-4 border-amber-400 rounded-3xl p-6 max-w-md w-full shadow-2xl pop-in text-center relative">
+      <div class="text-6xl mb-2 bounce-subtle">🌟🎉</div>
+      <h3 class="font-fredoka text-2xl text-emerald-600 font-bold">HEBAT SEKALI SALSABILA!</h3>
+      <p class="text-xs font-bold text-slate-500 mb-4">Transaksi Belanja Berhasil Dihitung!</p>
+      
+      <!-- Struk Nota Belanja -->
+      <div class="bg-amber-50 border-2 border-dashed border-amber-300 rounded-2xl p-4 text-left font-mono text-xs space-y-2 mb-4">
+        <div class="text-center font-bold font-fredoka text-base text-amber-800 border-b border-amber-200 pb-1">
+          TOKO SALSABILA HEBAT
+        </div>
+        <div id="modal-struk-items" class="space-y-1 text-slate-700 py-2 border-b border-amber-200">
+          <!-- Items List -->
+        </div>
+        <div class="flex justify-between font-bold text-sm text-slate-900 pt-1">
+          <span>Total Belanja:</span>
+          <span>Rp <span id="modal-total">0</span></span>
+        </div>
+        <div class="flex justify-between font-bold text-slate-600">
+          <span>Uang Dibayar:</span>
+          <span>Rp <span id="modal-bayar">0</span></span>
+        </div>
+        <div class="flex justify-between font-bold text-emerald-600 text-sm border-t border-amber-200 pt-1">
+          <span>Uang Kembalian:</span>
+          <span>Rp <span id="modal-kembali">0</span></span>
+        </div>
+      </div>
+
+      <button onclick="tutupModal()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-fredoka font-bold py-3 rounded-2xl text-lg shadow-lg transition">
+        🎈 Lanjut Jualan Lagi
+      </button>
+    </div>
+  </div>
+
+  <script>
+    /* ==========================================================================
+       DATABASES & GLOBAL STATE
+       ========================================================================== */
+    const DEFAULT_PRODUCTS = [
+      // Makanan & Jajan
+      { id: '1', nama: 'Donat Cokelat', harga: 1000, kategori: 'Makanan', emoji: '🍩' },
+      { id: '2', nama: 'Roti Tawar', harga: 2000, kategori: 'Makanan', emoji: '🍞' },
+      { id: '3', nama: 'Cokelat Batang', harga: 3000, kategori: 'Makanan', emoji: '🍫' },
+      { id: '4', nama: 'Biskuit Renyah', harga: 2000, kategori: 'Makanan', emoji: '🍪' },
+      { id: '5', nama: 'Es Krim Cone', harga: 3000, kategori: 'Makanan', emoji: '🍦' },
+      { id: '6', nama: 'Permen Lollipop', harga: 1000, kategori: 'Makanan', emoji: '🍭' },
+      { id: '7', nama: 'Kentang Goreng', harga: 4000, kategori: 'Makanan', emoji: '🍟' },
+      { id: '8', nama: 'Popcorn Manis', harga: 3000, kategori: 'Makanan', emoji: '🍿' },
+      { id: '9', nama: 'Sosis Bakar', harga: 2000, kategori: 'Makanan', emoji: '🌭' },
+      { id: '10', nama: 'Wafer Cokelat', harga: 1000, kategori: 'Makanan', emoji: '🧇' },
+      { id: '11', nama: 'Kue Muffin', harga: 3000, kategori: 'Makanan', emoji: '🧁' },
+
+      // Minuman
+      { id: '12', nama: 'Susu Kotak Cokelat', harga: 2000, kategori: 'Minuman', emoji: '🧃' },
+      { id: '13', nama: 'Susu Botol Strawberi', harga: 3000, kategori: 'Minuman', emoji: '🥛' },
+      { id: '14', nama: 'Air Mineral Botol', harga: 1000, kategori: 'Minuman', emoji: '💧' },
+      { id: '15', nama: 'Es Teh Manis', harga: 2000, kategori: 'Minuman', emoji: '🥤' },
+      { id: '16', nama: 'Jus Jeruk Segar', harga: 3000, kategori: 'Minuman', emoji: '🍊' },
+      { id: '17', nama: 'Minuman Boba', harga: 5000, kategori: 'Minuman', emoji: '🧋' },
+      { id: '18', nama: 'Yogurt Botol', harga: 3000, kategori: 'Minuman', emoji: '🍼' },
+
+      // Sembako
+      { id: '19', nama: 'Telur Ayam (2 Butir)', harga: 2000, kategori: 'Sembako', emoji: '🥚' },
+      { id: '20', nama: 'Beras 1kg', harga: 10000, kategori: 'Sembako', emoji: '🍚' },
+      { id: '21', nama: 'Minyak Goreng Botol', harga: 5000, kategori: 'Sembako', emoji: '🍾' },
+      { id: '22', nama: 'Gula Pasir 1/2kg', harga: 4000, kategori: 'Sembako', emoji: '🍬' },
+      { id: '23', nama: 'Mi Instan Goreng', harga: 3000, kategori: 'Sembako', emoji: '🍜' },
+      { id: '24', nama: 'Garam Dapur', harga: 1000, kategori: 'Sembako', emoji: '🧂' },
+      { id: '25', nama: 'Kecap Manis Botol', harga: 2000, kategori: 'Sembako', emoji: '🍶' },
+      { id: '26', nama: 'Margarin / Mentega', harga: 3000, kategori: 'Sembako', emoji: '🧈' },
+
+      // Alat Tulis Sekolah
+      { id: '27', nama: 'Pensil Warna Set', harga: 3000, kategori: 'Alat Tulis', emoji: '✏️' },
+      { id: '28', nama: 'Buku Gambar A4', harga: 4000, kategori: 'Alat Tulis', emoji: '🎨' },
+      { id: '29', nama: 'Buku Tulis Sekolah', harga: 3000, kategori: 'Alat Tulis', emoji: '📓' },
+      { id: '30', nama: 'Krayon 12 Warna', harga: 5000, kategori: 'Alat Tulis', emoji: '🖍️' },
+      { id: '31', nama: 'Spidol Warna-Warni', harga: 4000, kategori: 'Alat Tulis', emoji: '🖊️' },
+      { id: '32', nama: 'Penghapus Lucu', harga: 1000, kategori: 'Alat Tulis', emoji: '🧹' },
+      { id: '33', nama: 'Penggaris Plastik', harga: 2000, kategori: 'Alat Tulis', emoji: '📏' },
+      { id: '34', nama: 'Rautan Pensil', harga: 1000, kategori: 'Alat Tulis', emoji: '✂️' },
+      { id: '35', nama: 'Lem Kertas (Paper Glue)', harga: 2000, kategori: 'Alat Tulis', emoji: '🧴' },
+      { id: '36', nama: 'Tempat Pensil Lucu', harga: 5000, kategori: 'Alat Tulis', emoji: '👝' },
+
+      // Mainan
+      { id: '37', nama: 'Mobil-Mobilan Balap', harga: 5000, kategori: 'Mainan', emoji: '🚗' },
+      { id: '38', nama: 'Boneka Beruang', harga: 10000, kategori: 'Mainan', emoji: '🧸' },
+      { id: '39', nama: 'Bola Sepak Plastik', harga: 5000, kategori: 'Mainan', emoji: '⚽' },
+      { id: '40', nama: 'Balok Lego Susun', harga: 5000, kategori: 'Mainan', emoji: '🧩' },
+      { id: '41', nama: 'Robot Transformer', harga: 10000, kategori: 'Mainan', emoji: '🤖' },
+      { id: '42', nama: 'Gelembung Sabun', harga: 2000, kategori: 'Mainan', emoji: '🫧' },
+      { id: '43', nama: 'Pesawat Mainan', harga: 3000, kategori: 'Mainan', emoji: '✈️' },
+      { id: '44', nama: 'Yo-Yo Lampu', harga: 2000, kategori: 'Mainan', emoji: '🪀' },
+
+      // Obat-obatan
+      { id: '45', nama: 'Obat Batuk Anak', harga: 4000, kategori: 'Obat', emoji: '💊' },
+      { id: '46', nama: 'Plester Luka Gambar', harga: 1000, kategori: 'Obat', emoji: '🩹' },
+      { id: '47', nama: 'Minyak Kayu Putih', harga: 5000, kategori: 'Obat', emoji: '🧴' },
+      { id: '48', nama: 'Vitamin C Rasa Jeruk', harga: 2000,
